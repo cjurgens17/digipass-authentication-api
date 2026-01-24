@@ -1,0 +1,35 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Build folders
+bin/
+build/
+
+# Vendor folder (if you vendor dependencies)
+vendor/
+
+# Go modules
+go.sum
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
