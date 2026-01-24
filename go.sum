@@ -1,0 +1,4 @@
+github.com/labstack/echo/v5 v5.0.0 h1:JHKGrI0cbNsNMyKvranuY0C94O4hSM7yc/HtwcV3Na4=
+github.com/labstack/echo/v5 v5.0.0/go.mod h1:SyvlSdObGjRXeQfCCXW/sybkZdOOQZBmpKF0bvALaeo=
+golang.org/x/time v0.14.0 h1:MRx4UaLrDotUKUdCIqzPC48t1Y9hANFKIRpNx+Te8PI=
+golang.org/x/time v0.14.0/go.mod h1:eL/Oa2bBBK0TkX57Fyni+NgnyQQN4LitPmob2Hjnqw4=
