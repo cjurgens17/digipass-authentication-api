@@ -4,16 +4,20 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
-	"github.com/joho/godotenv"
 )
 
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found. If running Local add .env or else railway variables are being used")
+	if os.Getenv("RAILWAY_ENVIRONMENT_NAME") == "" {
+		log.Println("Local deploy - manually loading .env file")
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("Error loading .env file:", err)
+		}
 	}
 
 	ctx := context.Background()

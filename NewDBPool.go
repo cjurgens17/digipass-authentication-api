@@ -12,7 +12,7 @@ type App struct {
 }
 
 func NewDBPool(ctx context.Context) *pgxpool.Pool{
-	dbURL := os.Getenv("PUBLIC_DATABASE_URL")
+	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		log.Fatal("DATABASE_URL not set")
 	}
