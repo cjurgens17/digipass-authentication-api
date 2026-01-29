@@ -8,7 +8,32 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+type App struct {
+    DB *pgxpool.Pool
+}
+
+func NewDBPool(ctx context.Context) *pgxpool.Pool{
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL not set")
+	}
+
+	pool, err := pgxpool.New(ctx, dbURL)
+	if err != nil {
+		log.Fatalf("Unable to conect database: %v", err)
+	}
+
+	var now string
+	if err := pool.QueryRow(ctx, "SELECT NOW()::text").Scan(&now); err != nil {
+		log.Fatalf("Database ping failed: %v", err)
+	}
+
+	log.Println("Connected to database at", now)
+	return pool
+}
 
 
 func main() {
