@@ -10,7 +10,7 @@ type Account struct {
 	ID        uuid.UUID `json:"id" db:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	Name      string    `json:"name" db:"name" gorm:"type:varchar(255);not null" validate:"required"`
 	Email     string    `json:"email" db:"email" gorm:"type:varchar(255);not null;uniqueIndex" validate:"required,email"`
-	CreatedAt time.Time `json:"created_at" db:"created_at" gorm:"autoCreateTime"`
+	CreatedAt time.Time `json:"created_at" db:"created_at" gorm:"autoCreateTime" validate:"required"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at" gorm:"autoUpdateTime"`
 	Status    string    `json:"status" db:"status" gorm:"type:varchar(50);default:'active'" validate:"oneof=active suspended deleted"`
 	
