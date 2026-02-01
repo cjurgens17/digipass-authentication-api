@@ -1,16 +1,38 @@
 package models
 
 import (
+	"math/rand/v2"
 	"time"
+	"fmt"
 	"github.com/google/uuid"
 )
+
+var shortWords = []string{
+	"big", "new", "old", "hot", "red", "top", "far", "fun", "sky", "sun",
+	"bold", "calm", "cool", "dark", "deep", "easy", "fair", "fast", "fine",
+	"free", "full", "good", "gray", "hard", "high", "kind", "last", "lazy",
+	"long", "loud", "near", "next", "nice", "pink", "pure", "rare", "real",
+	"rich", "safe", "slow", "soft", "tall", "thin", "tidy", "tiny", "true",
+	"ugly", "vast", "warm", "weak", "wild", "wise", "zero",
+}
+
+var mediumWords = []string{
+	"amber", "beach", "brave", "bread", "bring", "chair", "charm", "chess",
+	"clear", "crown", "dance", "dream", "eagle", "flame", "frost", "glass",
+	"grace", "grape", "green", "happy", "heart", "honey", "horse", "house",
+	"light", "maple", "merit", "metal", "music", "noble", "ocean", "olive",
+	"peace", "pearl", "piano", "plant", "queen", "quick", "quiet", "river",
+	"royal", "smart", "snake", "space", "spark", "storm", "sweet", "swift",
+	"tiger", "trust", "unity", "urban", "value", "water", "whale", "world",
+}
+
 
 // Account represents the main account/organization
 type Account struct {
 	ID        uuid.UUID `json:"id" db:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	Name      string    `json:"name" db:"name" gorm:"type:varchar(255);not null" validate:"required"`
 	Email     string    `json:"email" db:"email" gorm:"type:varchar(255);not null;uniqueIndex" validate:"required,email"`
-	CreatedAt time.Time `json:"created_at" db:"created_at" gorm:"autoCreateTime" validate:"required"`
+	CreatedAt time.Time `json:"created_at" db:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at" gorm:"autoUpdateTime"`
 	Status    string    `json:"status" db:"status" gorm:"type:varchar(50);default:'active'" validate:"oneof=active suspended deleted"`
 	
@@ -23,7 +45,6 @@ type Account struct {
 type Tenant struct {
 	ID        uuid.UUID `json:"id" db:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	AccountID uuid.UUID `json:"account_id" db:"account_id" gorm:"type:uuid;not null;index" validate:"required"`
-	Name      string    `json:"name" db:"name" gorm:"type:varchar(255);not null" validate:"required"`
 	Slug      string    `json:"slug" db:"slug" gorm:"type:varchar(255);not null;uniqueIndex" validate:"required"`
 	CreatedAt time.Time `json:"created_at" db:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at" gorm:"autoUpdateTime"`
@@ -258,3 +279,17 @@ func (Session) TableName() string          { return "sessions" }
 func (UserConsent) TableName() string      { return "user_consents" }
 func (AccountUser) TableName() string      { return "account_users" }
 func (AuditLog) TableName() string         { return "audit_logs" }
+
+
+//Tenant Functions
+func (Tenant) CreateSlug() string {
+	//word-word-numbers
+	//3-4 letters-5-6 letters-4numbers
+	//
+	firstWord := shortWords[rand.IntN(len(shortWords))]
+	secondWord := mediumWords[rand.IntN(len(mediumWords))]
+
+	numbers := rand.IntN(9000) + 1000
+
+	return fmt.Sprintf("%s-%s-%d", firstWord, secondWord, numbers)
+}
