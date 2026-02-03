@@ -3,6 +3,7 @@ package services
 import (
 	"DigiPassAuthenticationApi/packages/models"
 	"errors"
+
 	"gorm.io/gorm"
 )
 
@@ -21,13 +22,8 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 		return nil, errors.New("Name and email are required")
 	}
 
-	//Open a transaction for rollbacks
+	//Open a transaction
 	tx := s.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
 
 	//1. Create Account
 	account := &models.Account{
@@ -37,6 +33,7 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 	}
 
 	if err := tx.Create(account).Error; err != nil {
+		tx.Rollback()
 		return nil, err
 	}
 
@@ -44,21 +41,33 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 	ts := NewTenantService(s.db)
 
 	//2. Create Tenant
-	slug, err := ts.CreateUniqueTenantSlug(s.db)
+	slug, err := ts.CreateUniqueTenantSlug()
 	if err != nil {
+		tx.Rollback()
 		return nil, err
 	}
 
-	tenant := &models.Tenant {
+	tenant := &models.Tenant{
 		AccountID: account.ID,
-		Slug: slug, 
+		Slug:      slug,
 	}
 
 	if err := tx.Create(tenant).Error; err != nil {
+		tx.Rollback()
 		return nil, err
 	}
 
-	//3. Link Creating User to AccountUsers
+	//3. Link User to AccountUser Table
+	aus := NewAccountUsersService(s.db)
+	accountUserErr := aus.CreateUser(account.ID, account.Email, "abc123", "owner")
+	if accountUserErr != nil {
+		tx.Rollback()
+		return nil, accountUserErr
+	}
+
 	//4. Commit transaction
+	if err := tx.Commit().Error; err != nil {
+		return nil, err
+	}
 	return account, nil
 }
