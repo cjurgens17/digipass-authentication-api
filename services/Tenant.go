@@ -16,14 +16,14 @@ func NewTenantService(db *gorm.DB) *TenantService {
 	}
 }
 
-func (s *TenantService) CreateUniqueTenantSlug(db *gorm.DB) (string,error){
+func (s *TenantService) CreateUniqueTenantSlug() (string,error){
 	maxAttempts := 10
 
 	for i := 0; i < maxAttempts; i++ {
 		slug := models.Tenant{}.CreateSlug()
 
 		var count int64
-		err := db.Model(&models.Tenant{}).Where("slug = ?", slug).Count(&count).Error
+		err := s.db.Model(&models.Tenant{}).Where("slug = ?", slug).Count(&count).Error
 		if err != nil {
 			return "", err
 		}
