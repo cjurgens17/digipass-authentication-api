@@ -6,7 +6,9 @@ import (
 )
 
 func SetUpRoutes(e *echo.Echo) {
-	apiv1 := e.Group("v1")
+	apiv1 := e.Group("/v1")
 
 	v1.RegisterAccountRoutes(apiv1)
+	v1.RegisterAccountUsersRoutes(apiv1)
+	v1.RegisterTenantRoutes(apiv1)
 }
