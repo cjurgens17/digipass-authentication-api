@@ -49,7 +49,7 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 
 	tenant := &models.Tenant{
 		AccountID: account.ID,
-		Slug:      slug,
+		Slug: slug,
 	}
 
 	if err := tx.Create(tenant).Error; err != nil {
