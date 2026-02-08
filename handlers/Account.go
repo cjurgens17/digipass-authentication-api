@@ -4,14 +4,13 @@ import (
 	"DigiPassAuthenticationApi/services"
 	"net/http"
 	"github.com/labstack/echo/v5"
+	"gorm.io/gorm"
 )
 
-type AccountHandler struct {
-	service *services.AccountService
-}
+type AccountHandler struct {}
 
-func NewAccountHandler(service *services.AccountService) *AccountHandler {
-	return &AccountHandler{service: service}
+func NewAccountHandler() *AccountHandler {
+	return &AccountHandler{}
 }
 
 func (h *AccountHandler) Create(c *echo.Context) error {
@@ -26,7 +25,9 @@ func (h *AccountHandler) Create(c *echo.Context) error {
 		})
 	}
 
-	account, err := h.service.CreateAccount(req.Name, req.Email)
+	accountService := services.NewAccountService(c.Get("db").(*gorm.DB))
+
+	account, err := accountService.CreateAccount(req.Name, req.Email)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": err.Error(),

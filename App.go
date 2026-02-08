@@ -15,9 +15,19 @@ func Run() error {
 	e := echo.New()
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
+	
+	
+	// Middleware to Inject DB into each request context
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c *echo.Context) error {
+			c.Set("db", db)
+			return next(c)
+		}
+	})
+
 
 	//need to pass db connection to handlers, or service layer
-	routes.SetUpRoutes(e, db)
+	routes.SetUpRoutes(e)
 	return e.Start(":1323")
 }
 

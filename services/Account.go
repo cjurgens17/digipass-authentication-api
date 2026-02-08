@@ -12,9 +12,7 @@ type AccountService struct {
 }
 
 func NewAccountService(db *gorm.DB) *AccountService {
-	return &AccountService{
-		db: db,
-	}
+	return &AccountService{db: db}
 }
 
 func (s *AccountService) CreateAccount(name string, email string) (*models.Account, error) {
