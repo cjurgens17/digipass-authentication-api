@@ -21,9 +21,7 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 	}
 
 	//0. Check to see if account already exist
-	if account, err := s.GetAccountByEmail(email); err != nil {
-		return nil, err
-	} else if account != nil {
+	if account, _ := s.GetAccountByEmail(email); account != nil {
 		return nil, ErrAccountAlreadyExists
 	}
 
