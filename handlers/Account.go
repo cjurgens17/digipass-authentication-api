@@ -4,7 +4,6 @@ import (
 	"DigiPassAuthenticationApi/services"
 	"net/http"
 	"github.com/labstack/echo/v5"
-	"gorm.io/gorm"
 )
 
 type AccountHandler struct {}
@@ -25,7 +24,7 @@ func (h *AccountHandler) Create(c *echo.Context) error {
 		})
 	}
 
-	accountService := services.NewAccountService(c.Get("db").(*gorm.DB))
+	accountService := services.NewAccountService(getDBFromContext(c))
 
 	account, err := accountService.CreateAccount(req.Name, req.Email)
 	if err != nil {

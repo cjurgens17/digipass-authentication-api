@@ -1,12 +1,7 @@
 package handlers
-import (
-	"DigiPassAuthenticationApi/services"
-)
 
-type AccountUsersHandler struct {
-	service *services.AccountUsersService
-}
+type AccountUsersHandler struct {}
 
-func NewAccountUsers(service *services.AccountUsersService) *AccountUsersHandler{
-	return &AccountUsersHandler{service: service}
+func NewAccountUsersHandler() *AccountUsersHandler{
+	return &AccountUsersHandler{}
 }
