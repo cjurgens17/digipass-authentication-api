@@ -11,9 +11,7 @@ type TenantService struct {
 }
 
 func NewTenantService(db *gorm.DB) *TenantService {
-	return &TenantService{
-		db: db,
-	}
+	return &TenantService{db: db}
 }
 
 func (s *TenantService) CreateUniqueTenantSlug() (string,error){
