@@ -11,5 +11,5 @@ func RegisterAccountRoutes(e *echo.Group) {
 	//Handler
 	accountHandler := handlers.NewAccountHandler()
 
-	v1Account.POST("/account/new", accountHandler.Create)
+	v1Account.POST("/new", accountHandler.Create)
 }
