@@ -4,9 +4,11 @@ import (
 	"DigiPassAuthenticationApi/packages/models"
 	"DigiPassAuthenticationApi/services"
 	"DigiPassAuthenticationApi/utils"
+	"errors"
+	"net/http"
+
 	"github.com/labstack/echo/v5"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 type AccountHandler struct{}
@@ -40,7 +42,7 @@ func (h *AccountHandler) Create(c *echo.Context) error {
 	})
 
 	if err != nil {
-		if err.Error() == "account already exits" {
+		if errors.Is(err, services.ErrAccountAlreadyExists) {
 			return c.JSON(http.StatusBadRequest, map[string]string {
 				"error": "Account already exist with given email",
 			})
