@@ -40,6 +40,11 @@ func (h *AccountHandler) Create(c *echo.Context) error {
 	})
 
 	if err != nil {
+		if err.Error() == "account already exits" {
+			return c.JSON(http.StatusBadRequest, map[string]string {
+				"error": "Account already exist with given email",
+			})
+		}
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": err.Error(),
 		})
