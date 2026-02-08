@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"github.com/labstack/echo/v5"
 	"DigiPassAuthenticationApi/handlers"
+	"github.com/labstack/echo/v5"
 )
 
 func RegisterAccountUsersRoutes(e *echo.Group) {
@@ -11,5 +11,5 @@ func RegisterAccountUsersRoutes(e *echo.Group) {
 	//Handler
 	accountUsersHandler := handlers.NewAccountUsersHandler()
 
-	println("Printing for placeholder right now",v1AccountUsers, accountUsersHandler)
+	println("Printing for placeholder right now", v1AccountUsers, accountUsersHandler)
 }

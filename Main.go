@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"os"
 	"log"
+	"os"
 )
 
-func main(){
+func main() {
 	if os.Getenv("RAILWAY_ENVIRONMENT_NAME") == "" {
 		log.Println("Local deploy - manually loading .env file")
 		if err := godotenv.Load(); err != nil {

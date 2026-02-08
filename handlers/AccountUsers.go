@@ -1,7 +1,7 @@
 package handlers
 
-type AccountUsersHandler struct {}
+type AccountUsersHandler struct{}
 
-func NewAccountUsersHandler() *AccountUsersHandler{
+func NewAccountUsersHandler() *AccountUsersHandler {
 	return &AccountUsersHandler{}
 }

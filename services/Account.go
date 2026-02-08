@@ -20,9 +20,6 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 		return nil, errors.New("Name and email are required")
 	}
 
-	//Open a transaction
-	tx := s.db.Begin()
-
 	//1. Create Account
 	account := &models.Account{
 		Name:   name,
@@ -30,43 +27,35 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 		Status: "active",
 	}
 
-	if err := tx.Create(account).Error; err != nil {
-		tx.Rollback()
+	if err := s.db.Create(account).Error; err != nil {
 		return nil, err
 	}
 
 	//Tenant Service
-	ts := NewTenantService(tx)
+	ts := NewTenantService(s.db)
 
 	//2. Create Tenant
 	slug, err := ts.CreateUniqueTenantSlug()
 	if err != nil {
-		tx.Rollback()
 		return nil, err
 	}
 
 	tenant := &models.Tenant{
 		AccountID: account.ID,
-		Slug: slug,
-		Name: fmt.Sprintf("%s-%s", account.Name, slug),
+		Slug:      slug,
+		Name:      fmt.Sprintf("%s-%s", account.Name, slug),
 	}
 
-	if err := tx.Create(tenant).Error; err != nil {
-		tx.Rollback()
+	if err := s.db.Create(tenant).Error; err != nil {
 		return nil, err
 	}
 
 	//3. Link User to AccountUser Table
-	aus := NewAccountUsersService(tx)
+	aus := NewAccountUsersService(s.db)
 	accountUserErr := aus.CreateUser(account.ID, account.Email, "abc123", "owner")
 	if accountUserErr != nil {
-		tx.Rollback()
 		return nil, accountUserErr
 	}
 
-	//4. Commit transaction
-	if err := tx.Commit().Error; err != nil {
-		return nil, err
-	}
 	return account, nil
 }
