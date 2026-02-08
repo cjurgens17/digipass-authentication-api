@@ -21,7 +21,9 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 	}
 
 	//0. Check to see if account already exist
-	if account, err := s.GetAccountByEmail(email); account != nil {
+	if account, err := s.GetAccountByEmail(email); err != nil {
+		return nil, err
+	} else if account != nil {
 		return nil, ErrAccountAlreadyExists
 	}
 
@@ -67,16 +69,16 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 
 func (s *AccountService) GetAccountByEmail(email string) (*models.Account, error) {
 	var account models.Account
-	
+
 	err := s.db.Where("email = ?", email).First(&account).Error
-	
+
 	if err == gorm.ErrRecordNotFound {
-		return nil, nil
+		return nil, ErrRecordNotFound
 	}
-	
+
 	if err != nil {
-		return nil, err  // Actual error
+		return nil, err // Actual error
 	}
-	
+
 	return &account, nil
 }
