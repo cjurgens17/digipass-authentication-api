@@ -1,7 +1,7 @@
 package handlers
 
-type TenantHandler struct {}
+type TenantHandler struct{}
 
-func NewTenantHandler() *TenantHandler{
+func NewTenantHandler() *TenantHandler {
 	return &TenantHandler{}
 }

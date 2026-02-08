@@ -14,10 +14,10 @@ func NewTenantService(db *gorm.DB) *TenantService {
 	return &TenantService{db: db}
 }
 
-func (s *TenantService) CreateUniqueTenantSlug() (string,error){
+func (s *TenantService) CreateUniqueTenantSlug() (string, error) {
 	maxAttempts := 10
 
-	for i := 0; i < maxAttempts; i++ {
+	for range maxAttempts {
 		slug := models.Tenant{}.CreateSlug()
 
 		var count int64
