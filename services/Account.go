@@ -38,7 +38,7 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 	}
 
 	//Tenant Service
-	ts := NewTenantService(s.db)
+	ts := NewTenantService(tx)
 
 	//2. Create Tenant
 	slug, err := ts.CreateUniqueTenantSlug()
@@ -59,7 +59,7 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 	}
 
 	//3. Link User to AccountUser Table
-	aus := NewAccountUsersService(s.db)
+	aus := NewAccountUsersService(tx)
 	accountUserErr := aus.CreateUser(account.ID, account.Email, "abc123", "owner")
 	if accountUserErr != nil {
 		tx.Rollback()
