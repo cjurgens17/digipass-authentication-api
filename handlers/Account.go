@@ -1,12 +1,15 @@
 package handlers
 
 import (
+	"DigiPassAuthenticationApi/packages/models"
 	"DigiPassAuthenticationApi/services"
-	"net/http"
+	"DigiPassAuthenticationApi/utils"
 	"github.com/labstack/echo/v5"
+	"gorm.io/gorm"
+	"net/http"
 )
 
-type AccountHandler struct {}
+type AccountHandler struct{}
 
 func NewAccountHandler() *AccountHandler {
 	return &AccountHandler{}
@@ -24,13 +27,23 @@ func (h *AccountHandler) Create(c *echo.Context) error {
 		})
 	}
 
-	accountService := services.NewAccountService(getDBFromContext(c))
+	var account *models.Account
 
-	account, err := accountService.CreateAccount(req.Name, req.Email)
+	err := utils.WithTransaction(getDBFromContext(c), func(tx *gorm.DB) error {
+		accountService := services.NewAccountService(tx)
+		var err error
+		account, err = accountService.CreateAccount(req.Name, req.Email)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": err.Error(),
 		})
 	}
+
 	return c.JSON(http.StatusCreated, account)
 }

@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"github.com/labstack/echo/v5"
 	"DigiPassAuthenticationApi/handlers"
+	"github.com/labstack/echo/v5"
 )
 
 func RegisterTenantRoutes(e *echo.Group) {
@@ -11,5 +11,5 @@ func RegisterTenantRoutes(e *echo.Group) {
 	//Handler
 	tenantHandler := handlers.NewAccountUsersHandler()
 
-	println("Printing for placeholder right now",v1Tenant, tenantHandler)
+	println("Printing for placeholder right now", v1Tenant, tenantHandler)
 }

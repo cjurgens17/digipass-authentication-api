@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-func SetUpRoutes(e *echo.Echo){
+func SetUpRoutes(e *echo.Echo) {
 	apiv1 := e.Group("v1")
 
 	v1.RegisterAccountRoutes(apiv1)

@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"github.com/labstack/echo/v5"
 	"DigiPassAuthenticationApi/handlers"
+	"github.com/labstack/echo/v5"
 )
 
 func RegisterAccountRoutes(e *echo.Group) {

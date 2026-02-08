@@ -1,13 +1,13 @@
 package jwt
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"log"
 	"os"
 	"time"
-	"crypto/hmac"
-	"crypto/sha256"
 )
 
 const SecondsInDay uint32 = 86400
@@ -21,8 +21,8 @@ type PublicClaims struct {
 	Iss string `json:"iss"`
 	Sub string `json:"sub"`
 	Aud string `json:"aud"`
-	Exp int64 `json:"exp"`
-	Iat int64 `json:"iat"`
+	Exp int64  `json:"exp"`
+	Iat int64  `json:"iat"`
 	Jti string `json:"jti"`
 }
 
@@ -31,13 +31,13 @@ type PrivateClaims struct {
 }
 
 type Payload struct {
-	Public PublicClaims `json:"public"`
+	Public  PublicClaims  `json:"public"`
 	Private PrivateClaims `json:"private"`
 }
 
 type ClientInfo struct {
 	Tenant string
-	Url string
+	Url    string
 }
 
 func base64URLEncode(data []byte) string {
@@ -47,10 +47,10 @@ func base64URLEncode(data []byte) string {
 func GenerateHeader() string {
 	alg := os.Getenv("JWT_ALGO")
 	if alg == "" {
-		alg =  "HS256"
+		alg = "HS256"
 	}
 
-	header := Header {
+	header := Header{
 		Alg: alg,
 		Typ: "JWT",
 	}
@@ -64,9 +64,9 @@ func GenerateHeader() string {
 }
 
 func DummyDBService(clientId string) ClientInfo {
-	return ClientInfo {
+	return ClientInfo{
 		Tenant: "SomberLake",
-		Url: "https://railway.digipass.authapi.dev.com",
+		Url:    "https://railway.digipass.authapi.dev.com",
 	}
 }
 
@@ -97,7 +97,7 @@ func GeneratePayload(clientId string, userId string) string {
 	exp := GenerateUnixExpiration(86400)
 	iat := GetCurrentUnixTimestamp()
 	jti := DummyGenerateJTI()
-	payload := Payload {
+	payload := Payload{
 		Public: PublicClaims{
 			Iss: clientInfo.Tenant,
 			Sub: userId,
@@ -106,7 +106,7 @@ func GeneratePayload(clientId string, userId string) string {
 			Iat: iat,
 			Jti: jti,
 		},
-		Private : PrivateClaims {
+		Private: PrivateClaims{
 			Data: nil,
 		},
 	}
@@ -121,7 +121,7 @@ func GeneratePayload(clientId string, userId string) string {
 
 func GenerateSignature(encodedHeader string, encodedPayload string) string {
 	secret := os.Getenv("JWT_SECRET")
-	if secret == ""{
+	if secret == "" {
 		log.Fatal("Secret not available, exiting to prevent vulnerability")
 	}
 
@@ -139,8 +139,8 @@ func GenerateSignature(encodedHeader string, encodedPayload string) string {
 func GenerateJWT(clientId string, userId string) string {
 	encodedHeader := GenerateHeader()
 	encodedPayload := GeneratePayload(clientId, userId)
-	signature := GenerateSignature(encodedHeader,encodedPayload)
-	
+	signature := GenerateSignature(encodedHeader, encodedPayload)
+
 	dot := "."
 
 	token := encodedHeader + dot + encodedPayload + dot + signature

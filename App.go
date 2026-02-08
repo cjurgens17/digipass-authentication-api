@@ -2,12 +2,12 @@ package main
 
 import (
 	"DigiPassAuthenticationApi/routes"
-	"log"
-	"os"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
 func Run() error {
@@ -15,8 +15,7 @@ func Run() error {
 	e := echo.New()
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())
-	
-	
+
 	// Middleware to Inject DB into each request context
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
@@ -24,7 +23,6 @@ func Run() error {
 			return next(c)
 		}
 	})
-
 
 	//need to pass db connection to handlers, or service layer
 	routes.SetUpRoutes(e)
