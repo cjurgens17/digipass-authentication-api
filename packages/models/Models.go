@@ -102,6 +102,7 @@ type Tenant struct {
 	ID        uuid.UUID `json:"id" db:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	AccountID uuid.UUID `json:"account_id" db:"account_id" gorm:"type:uuid;not null;index" validate:"required"`
 	Slug      string    `json:"slug" db:"slug" gorm:"type:varchar(255);not null;uniqueIndex" validate:"required"`
+	Name      string    `json:"name" db:"name" gorm:"type:varchar(255);not null" validate:"required"`
 	CreatedAt time.Time `json:"created_at" db:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at" gorm:"autoUpdateTime"`
 	Status    string    `json:"status" db:"status" gorm:"type:varchar(50);default:'active'" validate:"oneof=active suspended deleted"`
