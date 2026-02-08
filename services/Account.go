@@ -20,6 +20,11 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 		return nil, errors.New("Name and email are required")
 	}
 
+	//0. Check to see if account already exist
+	if account, err s.GetAccountByEmail(email); account != nil {
+		return nil, errors.new("account already exist")
+	}
+
 	//1. Create Account
 	account := &models.Account{
 		Name:   name,
@@ -58,4 +63,20 @@ func (s *AccountService) CreateAccount(name string, email string) (*models.Accou
 	}
 
 	return account, nil
+}
+
+func (s *AccountService) GetAccountByEmail(email string) (*models.Account, error) {
+	var account models.Account
+	
+	err := s.db.Where("email = ?", email).First(&account).Error
+	
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	
+	if err != nil {
+		return nil, err  // Actual error
+	}
+	
+	return &account, nil
 }
