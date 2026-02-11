@@ -5,10 +5,21 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
 	"gorm.io/driver/postgres"
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 	"log"
 	"os"
 )
+
+//ValidatorWrapper
+
+type ValidatorWrapper struct {
+	validator *validator.Validate
+}
+
+func (vw *ValidatorWrapper) Validate(i interface{}) error {
+	return vw.validator.Struct(i)
+}
 
 func Run() error {
 	db := initDB()
@@ -23,6 +34,10 @@ func Run() error {
 			return next(c)
 		}
 	})
+
+	//Set Up Validator Wrapper
+	e.Validator = &ValidatorWrapper{validator: validator.New()}
+
 
 	//need to pass db connection to handlers, or service layer
 	routes.SetUpRoutes(e)

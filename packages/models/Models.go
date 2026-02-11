@@ -83,6 +83,17 @@ var mediumWords = []string{
 	"error", "essay", "ether", "ethic", "event", "every", "exact", "exams",
 }
 
+
+type MagicLink struct {
+	ID          uuid.UUID  `json:"id" db:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	ApiKey      string     `json:"api_key" db:"api_key" gorm:"type:varchar(255);not null;index" validate:"required"`
+	TokenHash   string     `json:"-" db:"token_hash" gorm:"type:varchar(255);not null;uniqueIndex" validate:"required"`
+	ExpiresAt   time.Time  `json:"expires_at" db:"expires_at" gorm:"not null;index" validate:"required"`
+	UsedAt      *time.Time `json:"used_at,omitempty" db:"used_at" gorm:"index"`
+	CreatedAt   time.Time  `json:"created_at" db:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt   time.Time  `json:"updated_at" db:"updated_at" gorm:"autoUpdateTime"`
+}
+
 // Account represents the main account/organization
 type Account struct {
 	ID        uuid.UUID `json:"id" db:"id" gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
@@ -336,6 +347,7 @@ func (Session) TableName() string           { return "sessions" }
 func (UserConsent) TableName() string       { return "user_consents" }
 func (AccountUser) TableName() string       { return "account_users" }
 func (AuditLog) TableName() string          { return "audit_logs" }
+func (MagicLink) TableName() string          { return "magic_links" }
 
 // Tenant Functions
 func (Tenant) CreateSlug() string {
