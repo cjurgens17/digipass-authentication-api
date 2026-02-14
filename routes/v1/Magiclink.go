@@ -6,10 +6,11 @@ import (
 )
 
 func RegisterMagicLinkRoutes(e *echo.Group) {
-	v1Account := e.Group("/magiclink")
+	v1MagicLink := e.Group("/magiclink")
 
-	//Handler
-	accountHandler := handlers.NewAccountHandler()
+	// Handler
+	magicLinkHandler := handlers.NewMagicLinkHandler()
 
-	v1Account.POST("/new", accountHandler.Create)
+	v1MagicLink.POST("/verify", magicLinkHandler.Verify)
+	v1MagicLink.GET("/callback", magicLinkHandler.Callback)
 }
