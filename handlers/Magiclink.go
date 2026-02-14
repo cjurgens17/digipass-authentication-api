@@ -32,7 +32,7 @@ type MagicLinkVerifyRequest struct {
 }
 
 type MagicLinkCallbackRequest struct {
-	Token string `query:"token" validate:"required,min=32"`
+	Token string `query:"token" validate:"required,min=32,max=128,alphanum"`
 }
 
 func NewMagicLinkHandler() *MagiclinkHandler {
@@ -183,6 +183,10 @@ func (h *MagiclinkHandler) Callback(c *echo.Context) error {
 					errors[field] = fmt.Sprintf("%s is required", field)
 				case "min":
 					errors[field] = fmt.Sprintf("%s must be at least %s characters", field, e.Param())
+				case "max":
+					errors[field] = fmt.Sprintf("%s must be at most %s characters", field, e.Param())
+				case "alphanum":
+					errors[field] = fmt.Sprintf("%s must contain only letters and numbers", field)
 				default:
 					errors[field] = fmt.Sprintf("%s is invalid", field)
 				}
