@@ -11,4 +11,5 @@ func SetUpRoutes(e *echo.Echo) {
 	v1.RegisterAccountRoutes(apiv1)
 	v1.RegisterAccountUsersRoutes(apiv1)
 	v1.RegisterTenantRoutes(apiv1)
+	v1.RegisterMagicLinkRoutes(apiv1)
 }
